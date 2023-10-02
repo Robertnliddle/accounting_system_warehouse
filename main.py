@@ -26,15 +26,10 @@ out-of-range indices during a 'review' operation.
 #- Handle user inputs that are not as expected. The program should not crash in these cases, but instead, it should
 display an appropriate error message
 """
-amount = []
-product_name = []
-account = []
-balance = []
-sale = []
 
-purchase = 0
-warehouse = 0
-review = 0
+balance = 0
+sale = []
+warehouse = []
 
 commands_list_msg = """Select a command: 
 - balance: add or subtract from the account
@@ -57,7 +52,7 @@ while True:
     elif action == "balance":
         amount = int(input("Enter the amount to add/subtract to the account: "))
         print("The amount have been added to the account")
-        if amount == 0:
+        if amount < 0:
             print("Invalid number, please try again")
         balance += amount
         new_money = {"balance": amount}
@@ -66,21 +61,27 @@ while True:
     elif action == "sale":
         product_name = int(input("Enter the products name: "))
         price = input("Enter the price: ")
-        quantity = int(input("Enter the quantity: "))
-        print("Updated the sales")
-        warehouse = product_name
+        quantity = int(input("Enter the quantity sold: "))
+        if product_name in warehouse:
+            total_price = price * quantity
+            balance += total_price
+            print("Updated the sales")
+        else:
+            print("Product not found in the warehouse or the quantity is not enough")
         sale.append(sale)
 
     elif action == "purchase":
-        purchase = int(input("Enter the name of the product: "))
-        price = int(input("Enter the price: "))
+        purchase = input("Enter the name of the product: ")
+        price = input("Enter the price: ")
         quantity = int(input("Enter the quantity: "))
         print(f"You purchase {purchase}{quantity} items")
+        if balance:
+            print("You have to low balance in your account")
         sale.append(purchase)
 
     elif action == "account":
         print(f"Current account balance is: {balance} ")
-        account.append(balance)
+        balance.append(balance)
 
     elif action == "warehouse_list":
         print(f"List of all the products in the warehouse {product_name}: {quantity} at {price}")
@@ -88,16 +89,15 @@ while True:
 
     elif action == "warehouse":
         warehouse_product = input("Enter the products name: ")
-        if product_name:
+        if product_name in warehouse:
             print(f"{product_name}: {quantity} available at {price} each")
         else:
             print(f"{product_name} is not in the warehouse")
-        product_name =
         sale.append(product_name)
 
     elif action == "review":
-        first_indices = int(input("Enter the first value of the indices: "))
-        second_indices = int(input("Enter the second value of the indices: "))
+        first_indices = input("Enter the start of the indices: ")
+        second_indices = input("Enter the second value of the indices: ")
 
         if first_indices or second_indices == 0:
             print("Invalid value, please try again.")
