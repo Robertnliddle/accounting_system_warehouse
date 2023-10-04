@@ -28,8 +28,8 @@ display an appropriate error message
 """
 
 balance = 0
-sale = []
 warehouse = []
+history = []
 
 commands_list_msg = """Select a command: 
 - balance: add or subtract from the account
@@ -38,8 +38,12 @@ commands_list_msg = """Select a command:
 - account: display the current account balance
 - warehouse_list: display the total inventory in the warehouse along with products prices and quantities
 - warehouse: display a product and its status in the warehouse
-- review: Prompt for two indices 'from' and 'to', and display all recorded operations within that range
+- review: Review the history
 - end: exit the program"""
+
+commands_add_sub_msg = """Select if you want to add or subtract to the balance
+- add 
+- subtract"""
 
 while True:
     print(commands_list_msg)
@@ -50,13 +54,19 @@ while True:
         break
 
     elif action == "balance":
-        amount = int(input("Enter the amount to add/subtract to the account: "))
-        print("The amount have been added to the account")
-        if amount < 0:
+        commands_add_sub_msg = input("Select if you want to add or subtract to the balance: ")
+        print(commands_add_sub_msg)
+        if action == "add":
+            amount = int(input("Enter the amount to add to the balance: "))
+            balance += amount
+            print("The amount have been added to the balance")
+        elif action == "subtract":
+            sub = int(input("Enter the amount to subtract: "))
+            balance -= sub
+            print("The amount have been subtracted to the balance")
+        else:
             print("Invalid number, please try again")
-        balance += amount
-        new_money = {"balance": amount}
-        balance.append(amount)
+        history.append(balance)
 
     elif action == "sale":
         product_name = int(input("Enter the products name: "))
@@ -65,42 +75,45 @@ while True:
         if product_name in warehouse:
             total_price = price * quantity
             balance += total_price
-            print("Updated the sales")
+            print(f"Products sold:{product_name},Quantity:{quantity}")
         else:
             print("Product not found in the warehouse or the quantity is not enough")
-        sale.append(sale)
+        history.append(f"{product_name} is out of order")
 
     elif action == "purchase":
         purchase = input("Enter the name of the product: ")
         price = input("Enter the price: ")
         quantity = int(input("Enter the quantity: "))
-        print(f"You purchase {purchase}{quantity} items")
-        if balance:
+        total_price = price * quantity
+        print(f"You purchase {purchase}{quantity} items for {total_price}")
+        if product_name in warehouse:
+            history[product_name][quantity] += 1
+
+        if product_name not in warehouse:
+            history[product_name][quantity] += 1
+        else:
+            # total_price > balance ? 
             print("You have to low balance in your account")
-        sale.append(purchase)
+            history.append(purchase)
 
     elif action == "account":
         print(f"Current account balance is: {balance} ")
-        balance.append(balance)
 
     elif action == "warehouse_list":
-        print(f"List of all the products in the warehouse {product_name}: {quantity} at {price}")
-        sale.append(product_name)
+        for product_name, quantity in history():
+            print(f"{product_name}: {quantity}")
 
     elif action == "warehouse":
         warehouse_product = input("Enter the products name: ")
-        if product_name in warehouse:
+        if product_name in warehouse[product_name][quantity] > 0:
             print(f"{product_name}: {quantity} available at {price} each")
         else:
-            print(f"{product_name} is not in the warehouse")
-        sale.append(product_name)
+            print(f"The product name you are looking for are not in the warehouse")
+        history.append(product_name)
 
     elif action == "review":
-        first_indices = input("Enter the start of the indices: ")
-        second_indices = input("Enter the second value of the indices: ")
-
-        if first_indices or second_indices == 0:
-            print("Invalid value, please try again.")
+        from_idx = input("Enter the start of the indices: ")
+        to_idx = input("Enter the second value of the indices: ")
 
     else:
         print(f"The command are not supported {action}. Please select another command.")
