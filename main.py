@@ -90,9 +90,9 @@ while True:
             history[product_name][quantity] += 1
 
         if product_name not in warehouse:
-            history[product_name][quantity] += 1
+            history[product_name][quantity] = {"price":0.0, "quantity":0}
         else:
-            # total_price > balance ? 
+            # total_price > balance ?
             print("You have to low balance in your account")
             history.append(purchase)
 
@@ -100,13 +100,13 @@ while True:
         print(f"Current account balance is: {balance} ")
 
     elif action == "warehouse_list":
-        for product_name, quantity in history():
+        for product_name, quantity in history.():
             print(f"{product_name}: {quantity}")
 
     elif action == "warehouse":
         warehouse_product = input("Enter the products name: ")
-        if product_name in warehouse[product_name][quantity] > 0:
-            print(f"{product_name}: {quantity} available at {price} each")
+        if product_name in warehouse[product_name]["quantity"] > 0:
+            print(f"{product_name} is available at the warehouse")
         else:
             print(f"The product name you are looking for are not in the warehouse")
         history.append(product_name)
