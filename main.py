@@ -28,7 +28,7 @@ display an appropriate error message
 """
 
 balance = 0
-warehouse = []
+warehouse = {}
 history = []
 
 commands_list_msg = """Select a command: 
@@ -54,8 +54,8 @@ while True:
         break
 
     elif action == "balance":
-        commands_add_sub_msg = input("Select if you want to add or subtract to the balance: ")
         print(commands_add_sub_msg)
+        action = input("Select a command: ")
         if action == "add":
             amount = int(input("Enter the amount to add to the balance: "))
             balance += amount
@@ -66,11 +66,11 @@ while True:
             print("The amount have been subtracted to the balance")
         else:
             print("Invalid number, please try again")
-        history.append(balance)
+            history.append(balance)
 
     elif action == "sale":
-        product_name = int(input("Enter the products name: "))
-        price = input("Enter the price: ")
+        product_name = input("Enter the products name: ")
+        price = int(input("Enter the price: "))
         quantity = int(input("Enter the quantity sold: "))
         if product_name in warehouse:
             total_price = price * quantity
@@ -81,30 +81,28 @@ while True:
         history.append(f"{product_name} is out of order")
 
     elif action == "purchase":
-        purchase = input("Enter the name of the product: ")
-        price = input("Enter the price: ")
+        product_name = input("Enter the name of the product: ")
+        price = int(input("Enter the price: "))
         quantity = int(input("Enter the quantity: "))
         total_price = price * quantity
-        print(f"You purchase {purchase}{quantity} items for {total_price}")
-        if product_name in warehouse:
-            history[product_name][quantity] += 1
-
-        if product_name not in warehouse:
-            history[product_name][quantity] = {"price":0.0, "quantity":0}
-        else:
-            # total_price > balance ?
+        if total_price > balance:
             print("You have to low balance in your account")
-            history.append(purchase)
+        print(f"You purchase {product_name}{quantity} items for {total_price}")
+        if product_name not in warehouse:
+            warehouse[product_name] = {"price": 0.0, "quantity": 0}
+        if product_name in warehouse:
+            warehouse[product_name]["quantity"] += quantity
+        history.append(product_name)
 
     elif action == "account":
         print(f"Current account balance is: {balance} ")
 
     elif action == "warehouse_list":
-        for product_name, quantity in history.():
+        for product_name, quantity in warehouse.items():
             print(f"{product_name}: {quantity}")
 
     elif action == "warehouse":
-        warehouse_product = input("Enter the products name: ")
+        product_name = input("Enter the products name: ")
         if product_name in warehouse[product_name]["quantity"] > 0:
             print(f"{product_name} is available at the warehouse")
         else:
@@ -112,8 +110,9 @@ while True:
         history.append(product_name)
 
     elif action == "review":
-        from_idx = input("Enter the start of the indices: ")
-        to_idx = input("Enter the second value of the indices: ")
-
+        first_index = int(input("Enter the first index: "))
+        second_index = int(input("Enter the second index: "))
+        for entry in history[first_index:second_index]:
+            print(entry)
     else:
         print(f"The command are not supported {action}. Please select another command.")
