@@ -60,29 +60,29 @@ while True:
             amount = int(input("Enter the amount to add to the balance: "))
             balance += amount
             print("The amount have been added to the balance")
+            history.append(balance)
         elif action == "subtract":
             sub = int(input("Enter the amount to subtract: "))
             balance -= sub
-            if sub > 0:
+            if sub <= 0:
                 print("The action is not possible")
             else:
                 print("The amount have been subtracted to the balance")
-            history.append(balance)
-        else:
-            print("Invalid number, please try again")
+                history.append(balance)
 
     elif action == "sale":
         product_name = input("Enter the products name: ")
         price = int(input("Enter the price: "))
         quantity = int(input("Enter the quantity sold: "))
         if product_name in warehouse:
-            total_price = price * quantity
-            balance += total_price
-            warehouse -= product_name
-            print(f"Products sold:{product_name},Quantity:{quantity}")
+            if quantity in warehouse:
+                total_price = price * quantity
+                balance += total_price
+                warehouse -= product_name
+                print(f"Products sold:{product_name},Quantity:{quantity}")
+                history.append(product_name)
         else:
             print("Product not found in the warehouse or the quantity is not enough")
-        history.append(f"{product_name} is out of order")
 
     elif action == "purchase":
         product_name = input("Enter the name of the product: ")
