@@ -64,7 +64,10 @@ while True:
         elif action == "subtract":
             sub = int(input("Enter the amount to subtract: "))
             balance -= sub
-            if sub <= 0:
+            if balance < 0:
+                print("The action is not possible")
+                balance += sub
+            elif sub <= 0:
                 print("The action is not possible")
             else:
                 print("The amount have been subtracted to the balance")
@@ -75,10 +78,10 @@ while True:
         price = int(input("Enter the price: "))
         quantity = int(input("Enter the quantity sold: "))
         if product_name in warehouse:
-            if quantity in warehouse:
+            if quantity <= warehouse[product_name]:
                 total_price = price * quantity
                 balance += total_price
-                warehouse -= product_name
+                warehouse[product_name] -= quantity
                 print(f"Products sold:{product_name},Quantity:{quantity}")
                 history.append(product_name)
         else:
@@ -91,9 +94,12 @@ while True:
         total_price = price * quantity
         if total_price > balance:
             print("You have to low balance in your account")
+            continue
+        balance -= total_price
         print(f"You purchase {product_name}{quantity} items for {total_price}")
         if product_name not in warehouse:
-            warehouse[product_name] = {"price": 0.0, "quantity": 0}
+            warehouse[product_name] = 0
+        warehouse[product_name] += quantity
         history.append(product_name)
 
     elif action == "account":
@@ -106,11 +112,9 @@ while True:
     elif action == "warehouse":
         product_name = input("Enter the products name: ")
         if product_name in warehouse:
-            if warehouse.items() in warehouse[product_name]["quantity"] > 0:
-                print(f"{product_name} is available at the warehouse")
+            print(f"{product_name} is available at the warehouse: {warehouse[product_name]}")
         else:
             print(f"The product name you are looking for are not in the warehouse")
-        history.append(product_name)
 
     elif action == "review":
         first_index = int(input("Enter the first index: "))
